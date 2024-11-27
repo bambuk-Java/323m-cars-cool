@@ -19,14 +19,46 @@ export default function Home() {
       <h1>My Frontend - The very beginning</h1>
         <button onClick={buttonHandler}>load cars</button>
         <br/>
-        <ul>
-          { cars.map(car =>
-            <li key={car.id}>
-                {car.brand + " " + car.model + " (" + car.horsePower + ")"}
-            </li>
-          )}
-        </ul>
-        <Link href="/carform">add a new car</Link>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Brand
+                <select>
+                  <option value="empty"></option>
+                  <option value="asc">Aufsteigend</option>
+                  <option value="desc">Absteigend</option>
+                </select>
+              </th>
+              <th>
+                Model
+                <select>
+                  <option value="empty"></option>
+                  <option value="asc">Aufsteigend</option>
+                  <option value="desc">Absteigend</option>
+                </select>
+              </th>
+              <th>
+                Horsepower
+                <select>
+                  <option value="empty"></option>
+                  <option value="asc">Aufsteigend</option>
+                  <option value="desc">Absteigend</option>
+                </select>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {cars.map(car =>
+                <tr>
+                  <td>{car.brand}</td>
+                  <td>{car.model}</td>
+                  <td>{car.horsePower}</td>
+                </tr>
+            )}
+          </tbody>
+        </table>
+      <Link href="/carform">add a new car</Link>
     </div>
   )
 }
