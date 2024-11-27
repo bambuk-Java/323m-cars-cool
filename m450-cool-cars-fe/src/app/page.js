@@ -14,6 +14,32 @@ export default function Home() {
       .then(data => setCars(data))
   }
 
+  function selectHandler(event) {
+    const selection = event.target.value;
+    switch (selection) {
+      case "brandAsc":
+        setCars([... cars.sort((c1, c2) => c1.brand.localeCompare(c2.brand))])
+        break;
+      case "brandDesc":
+        setCars([... cars.sort((c1, c2) => c2.brand.localeCompare(c1.brand))])
+        break;
+      case "modelAsc":
+        setCars([... cars.sort((c1, c2) => c1.model.localeCompare(c2.model))])
+        break;
+      case "modelDesc":
+        setCars([... cars.sort((c1, c2) => c2.model.localeCompare(c1.model))])
+        break;
+      case "powerAsc":
+        setCars([... cars.sort((c1, c2) => c1.horsePower - c2.horsePower)])
+        break;
+      case "powerDesc":
+        setCars([... cars.sort((c1, c2) => c2.horsePower - c1.horsePower)])
+        break;
+      default:
+        buttonHandler();
+    }
+  }
+
   return (
     <div className="App">
       <h1>My Frontend - The very beginning</h1>
@@ -24,26 +50,26 @@ export default function Home() {
             <tr>
               <th>
                 Brand
-                <select>
+                <select onChange={(event) => selectHandler(event)}>
                   <option value="empty"></option>
-                  <option value="asc">Aufsteigend</option>
-                  <option value="desc">Absteigend</option>
+                  <option value="brandAsc">Aufsteigend</option>
+                  <option value="brandDesc">Absteigend</option>
                 </select>
               </th>
               <th>
                 Model
-                <select>
+                <select onChange={(event) => selectHandler(event)}>
                   <option value="empty"></option>
-                  <option value="asc">Aufsteigend</option>
-                  <option value="desc">Absteigend</option>
+                  <option value="modelAsc">Aufsteigend</option>
+                  <option value="modelDesc">Absteigend</option>
                 </select>
               </th>
               <th>
                 Horsepower
-                <select>
+                <select onChange={(event) => selectHandler(event)}>
                   <option value="empty"></option>
-                  <option value="asc">Aufsteigend</option>
-                  <option value="desc">Absteigend</option>
+                  <option value="powerAsc">Aufsteigend</option>
+                  <option value="powerDesc">Absteigend</option>
                 </select>
               </th>
             </tr>
