@@ -3,10 +3,7 @@ package ch.bbw.coolcarsbackend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,4 +40,13 @@ public class CarController implements ApplicationRunner {
     public Car getACar(@PathVariable int id) {
         return new Car(id, "Ford", "Mustang", 450);
     }
+    @PostMapping("cars")
+    public Car postACar(@RequestBody Car car) {
+        // Speichere das Auto in der Datenbank
+        Car savedCar = carRepository.save(car);
+        return savedCar; // Gib das gespeicherte Auto zurück
+    }
+
+
+
 }

@@ -9,6 +9,8 @@ export default function Home() {
     const [searchField, setSearchField] = useState("");
     const [currentPage, setCurrentPage] = useState(1); // Aktuelle Seite
     const itemsPerPage = 5; // Anzahl der Elemente pro Seite
+    const [formOpen, setFormOpen] = useState(false)
+    const [refreshFlag, setRefreshFlag] = useState(false)
 
     // Daten laden
     function buttonHandler() {
@@ -60,6 +62,74 @@ export default function Home() {
         }
         setCurrentPage(1); // Zurück zur ersten Seite nach Sortierung
     }
+
+    // ---- Form ----
+    const [formData, setFormData] = useState({
+        brand: "",
+        model: "",
+        HorsePower: ""
+    });
+    const openForm = () => {
+        setFormOpen(true);
+    }
+    //handle Form change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: name === 'diff' ? Number(value) : value,
+        });
+        ;
+    };
+
+    //Handle Submit
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.brand || !formData.model || !formData.horsePower) {
+            alert("Bitte alle erforderlichen Felder ausfüllen.");
+            return;
+        }
+        onSubmit(formData);
+        setFormData({
+            brand: "",
+            model: "",
+            horsePower: ""
+        });
+    };
+
+    //submit Form data
+    const onSubmit = async (formData) => {
+        try {
+            const response = await fetch("http://localhost:8080/cars", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData), // Korrekt strukturieren
+            });
+
+            if (!response.ok) {
+                throw new Error(`Fehler: ${response.status} - ${response.statusText}`);
+            }
+            console.log("Auto erfolgreich gespeichert.");
+            alert("Auto erfolgreich hinzugefügt!");
+
+            // Refresh-Funktion, um die Liste zu aktualisieren
+            buttonHandler();
+            setFormOpen(false); // Formular schließen
+            setFormData({
+                brand: "",
+                model: "",
+                horsePower: "",
+            });
+        } catch (error) {
+            console.error("Fehler beim Speichern des Autos:", error);
+            alert("Fehler beim Speichern. Bitte später erneut versuchen.");
+        }
+    };
+
+
+
 
     // Suche anwenden
     useEffect(() => {
@@ -156,7 +226,38 @@ export default function Home() {
                     Weiter
                 </button>
             </div>
-            <Link href="/carform">add a new car</Link>
+            <button onClick={openForm}>add a new car</button>
+            { formOpen && (
+                <div>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="brand"> Brand</label>
+                        <input
+                            type={"text"}
+                            id="brand"
+                            name ="brand"
+                            value ={formData.brand}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="model"> Model</label>
+                        <input
+                            type={"text"}
+                            id="model"
+                            name ="model"
+                            value ={formData.model}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="horsePower">Horsepower</label>
+                        <input
+                            type="number"
+                            id="horsePower"
+                            name="horsePower"
+                            value={formData.horsePower}
+                            onChange={handleChange}
+                            ></input>
+                        <button type={"submit"}>Submit</button>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }
