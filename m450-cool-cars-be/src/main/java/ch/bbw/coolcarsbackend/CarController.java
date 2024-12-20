@@ -40,6 +40,7 @@ public class CarController implements ApplicationRunner {
     public Car getACar(@PathVariable int id) {
         return new Car(id, "Ford", "Mustang", 450);
     }
+
     @PostMapping("cars")
     public Car postACar(@RequestBody Car car) {
         // Speichere das Auto in der Datenbank
@@ -47,6 +48,14 @@ public class CarController implements ApplicationRunner {
         return savedCar; // Gib das gespeicherte Auto zurück
     }
 
-
+    @DeleteMapping("cars/{id}")
+    public void deleteCar(@PathVariable int id) {
+        if (carRepository.existsById(id)) {
+            carRepository.deleteById(id);
+            System.out.println("Car with ID " + id + " has been deleted.");
+        } else {
+            throw new IllegalArgumentException("Car with ID " + id + " does not exist.");
+        }
+    }
 
 }

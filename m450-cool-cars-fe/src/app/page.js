@@ -70,7 +70,7 @@ export default function Home() {
         HorsePower: ""
     });
     const openForm = () => {
-        setFormOpen(true);
+        formOpen ? setFormOpen(false) : setFormOpen(true);
     }
     //handle Form change
     const handleChange = (e) => {
@@ -79,7 +79,6 @@ export default function Home() {
             ...formData,
             [name]: name === 'diff' ? Number(value) : value,
         });
-        ;
     };
 
     //Handle Submit
@@ -89,7 +88,8 @@ export default function Home() {
             alert("Bitte alle erforderlichen Felder ausfüllen.");
             return;
         }
-        onSubmit(formData);
+        openForm();
+        onSubmit();
         setFormData({
             brand: "",
             model: "",
@@ -98,7 +98,7 @@ export default function Home() {
     };
 
     //submit Form data
-    const onSubmit = async (formData) => {
+    const onSubmit = async () => {
         try {
             const response = await fetch("http://localhost:8080/cars", {
                 method: 'POST',
@@ -125,6 +125,28 @@ export default function Home() {
         } catch (error) {
             console.error("Fehler beim Speichern des Autos:", error);
             alert("Fehler beim Speichern. Bitte später erneut versuchen.");
+        }
+    };
+
+    //delete carlos (Spanier ohne Auto)
+    const onDelte = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/cars/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Fehler: ${response.status} - ${response.statusText}`);
+            }
+            buttonHandler();
+            console.log("Auto erfolgreich gelöscht.");
+            alert("Auto erfolgreich gelöscht!");
+        } catch (error) {
+            console.error("Fehler beim Löschen des Autos:", error);
+            alert("Fehler beim Löschen. Bitte später erneut versuchen.");
         }
     };
 
@@ -161,10 +183,13 @@ export default function Home() {
         }
     };
 
+    useEffect(() => {
+        buttonHandler();
+    }, []);
+
     return (
         <div className="App">
             <h1>My Frontend - The very beginning</h1>
-            <button onClick={buttonHandler}>load cars</button>
             <br />
             <table>
                 <thead>
@@ -208,6 +233,7 @@ export default function Home() {
                         <td>{car.brand}</td>
                         <td>{car.model}</td>
                         <td>{car.horsePower}</td>
+                        <td><button onClick={() => onDelte(car.id)}>delete car</button></td>
                     </tr>
                 ))}
                 </tbody>

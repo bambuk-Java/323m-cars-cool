@@ -1,4 +1,4 @@
-// File: D:\BBW\Modul_323\GrossesProjekt\323m-cars-cool\m450-cool-cars-fe\src\app\page.js
+// File: C:\Marco\Schule\BBW\5._Semester\Module\M323\323m-cars-cool\m450-cool-cars-fe\src\app\page.js
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
