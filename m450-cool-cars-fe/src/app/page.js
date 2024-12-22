@@ -10,7 +10,11 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState(1); // Aktuelle Seite
     const itemsPerPage = 5; // Anzahl der Elemente pro Seite
     const [formOpen, setFormOpen] = useState(false)
-    const [refreshFlag, setRefreshFlag] = useState(false)
+
+    // Zustände für die Filter
+    const [brandFilter, setBrandFilter] = useState("empty");
+    const [modelFilter, setModelFilter] = useState("empty");
+    const [powerFilter, setPowerFilter] = useState("empty");
 
     // Daten laden
     function buttonHandler() {
@@ -23,8 +27,19 @@ export default function Home() {
     }
 
     // Sortieren
-    function selectHandler(event) {
+    function selectHandler(event, type) {
         const selection = event.target.value;
+
+        // Setze alle Filter zurück
+        setBrandFilter("empty");
+        setModelFilter("empty");
+        setPowerFilter("empty");
+
+        // Aktualisiere nur den ausgewählten Filter
+        if (type === "brand") setBrandFilter(selection);
+        if (type === "model") setModelFilter(selection);
+        if (type === "power") setPowerFilter(selection);
+
         const sortedCars = [...filteredCars]; // Arbeite mit der gefilterten Liste
         switch (selection) {
             case "brandAsc":
@@ -85,7 +100,6 @@ export default function Home() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!formData.brand || !formData.model || !formData.horsePower) {
-            alert("Bitte alle erforderlichen Felder ausfüllen.");
             return;
         }
         openForm();
@@ -112,7 +126,6 @@ export default function Home() {
                 throw new Error(`Fehler: ${response.status} - ${response.statusText}`);
             }
             console.log("Auto erfolgreich gespeichert.");
-            alert("Auto erfolgreich hinzugefügt!");
 
             // Refresh-Funktion, um die Liste zu aktualisieren
             buttonHandler();
@@ -124,12 +137,11 @@ export default function Home() {
             });
         } catch (error) {
             console.error("Fehler beim Speichern des Autos:", error);
-            alert("Fehler beim Speichern. Bitte später erneut versuchen.");
         }
     };
 
-    //delete carlos (Spanier ohne Auto)
-    const onDelte = async (id) => {
+    //delete car
+    const onDelete = async (id) => {
         try {
             const response = await fetch(`http://localhost:8080/cars/${id}`, {
                 method: 'DELETE',
@@ -143,15 +155,10 @@ export default function Home() {
             }
             buttonHandler();
             console.log("Auto erfolgreich gelöscht.");
-            alert("Auto erfolgreich gelöscht!");
         } catch (error) {
             console.error("Fehler beim Löschen des Autos:", error);
-            alert("Fehler beim Löschen. Bitte später erneut versuchen.");
         }
     };
-
-
-
 
     // Suche anwenden
     useEffect(() => {
@@ -191,12 +198,16 @@ export default function Home() {
         <div className="App">
             <h1>My Frontend - The very beginning</h1>
             <br />
+            <button onClick={openForm}>add a new car</button>
             <table>
                 <thead>
                 <tr>
                     <th>
                         Brand
-                        <select onChange={(event) => selectHandler(event)}>
+                        <select
+                            value={brandFilter}
+                            onChange={(event) => selectHandler(event, "brand")}
+                        >
                             <option value="empty"></option>
                             <option value="brandAsc">Aufsteigend</option>
                             <option value="brandDesc">Absteigend</option>
@@ -204,7 +215,10 @@ export default function Home() {
                     </th>
                     <th>
                         Model
-                        <select onChange={(event) => selectHandler(event)}>
+                        <select
+                            value={modelFilter}
+                            onChange={(event) => selectHandler(event, "model")}
+                        >
                             <option value="empty"></option>
                             <option value="modelAsc">Aufsteigend</option>
                             <option value="modelDesc">Absteigend</option>
@@ -212,7 +226,10 @@ export default function Home() {
                     </th>
                     <th>
                         Horsepower
-                        <select onChange={(event) => selectHandler(event)}>
+                        <select
+                            value={powerFilter}
+                            onChange={(event) => selectHandler(event, "power")}
+                        >
                             <option value="empty"></option>
                             <option value="powerAsc">Aufsteigend</option>
                             <option value="powerDesc">Absteigend</option>
@@ -233,7 +250,7 @@ export default function Home() {
                         <td>{car.brand}</td>
                         <td>{car.model}</td>
                         <td>{car.horsePower}</td>
-                        <td><button onClick={() => onDelte(car.id)}>delete car</button></td>
+                        <td><button onClick={() => onDelete(car.id)}>delete car</button></td>
                     </tr>
                 ))}
                 </tbody>
@@ -252,36 +269,39 @@ export default function Home() {
                     Weiter
                 </button>
             </div>
-            <button onClick={openForm}>add a new car</button>
-            { formOpen && (
-                <div>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="brand"> Brand</label>
-                        <input
-                            type={"text"}
-                            id="brand"
-                            name ="brand"
-                            value ={formData.brand}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="model"> Model</label>
-                        <input
-                            type={"text"}
-                            id="model"
-                            name ="model"
-                            value ={formData.model}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="horsePower">Horsepower</label>
-                        <input
-                            type="number"
-                            id="horsePower"
-                            name="horsePower"
-                            value={formData.horsePower}
-                            onChange={handleChange}
-                            ></input>
-                        <button type={"submit"}>Submit</button>
-                    </form>
+            {formOpen && (
+                <div className="overlay">
+                    <div className="modal">
+                        <button className="modal-close" onClick={openForm}>&times;</button>
+                        <form onSubmit={handleSubmit}>
+                            <h2>Add New Car</h2>
+                            <label htmlFor="brand">Brand</label>
+                            <input
+                                type="text"
+                                id="brand"
+                                name="brand"
+                                value={formData.brand}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="model">Model</label>
+                            <input
+                                type="text"
+                                id="model"
+                                name="model"
+                                value={formData.model}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="horsePower">Horsepower</label>
+                            <input
+                                type="number"
+                                id="horsePower"
+                                name="horsePower"
+                                value={formData.horsePower}
+                                onChange={handleChange}
+                            />
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
                 </div>
             )}
         </div>

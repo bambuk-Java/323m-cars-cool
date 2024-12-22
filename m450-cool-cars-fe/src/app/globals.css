@@ -1,107 +1,228 @@
 :root {
-  --max-width: 1100px;
-  --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
-
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-
-  --primary-glow: conic-gradient(
-    from 180deg at 50% 50%,
-    #16abff33 0deg,
-    #0885ff33 55deg,
-    #54d6ff33 120deg,
-    #0071ff33 160deg,
-    transparent 360deg
-  );
-  --secondary-glow: radial-gradient(
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0)
-  );
-
-  --tile-start-rgb: 239, 245, 249;
-  --tile-end-rgb: 228, 232, 233;
-  --tile-border: conic-gradient(
-    #00000080,
-    #00000040,
-    #00000030,
-    #00000020,
-    #00000010,
-    #00000010,
-    #00000080
-  );
-
-  --callout-rgb: 238, 240, 241;
-  --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
-  --card-border-rgb: 131, 134, 135;
+  --primary-color: #0078ff; /* Azurblau */
+  --secondary-color: #0056b3; /* Dunkleres Azurblau */
+  --accent-color: #54d6ff; /* Helles Azurblau */
+  --background-color: #f0faff; /* Sehr helles Azurblau */
+  --foreground-color: #1f2937; /* Dunkles Grau für Text */
+  --border-color: #cfe8ff; /* Sanfte Akzentfarbe */
+  --button-hover-color: #0056b3;
+  --font-sans: "Roboto", sans-serif;
+  --card-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  --overlay-background: rgba(0, 0, 0, 0.6);
+  --modal-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-
-    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-    --secondary-glow: linear-gradient(
-      to bottom right,
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0.3)
-    );
-
-    --tile-start-rgb: 2, 13, 46;
-    --tile-end-rgb: 2, 5, 19;
-    --tile-border: conic-gradient(
-      #ffffff80,
-      #ffffff40,
-      #ffffff30,
-      #ffffff20,
-      #ffffff10,
-      #ffffff10,
-      #ffffff80
-    );
-
-    --callout-rgb: 20, 20, 20;
-    --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
-  }
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
+body {
+  font-family: var(--font-sans);
+  color: var(--foreground-color);
+  background-color: var(--background-color);
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin: 20px 0;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+button:hover {
+  background-color: var(--button-hover-color);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+button:disabled {
+  background-color: #d0e6ff;
+  cursor: not-allowed;
+}
+
+input[type="search"],
+input[type="text"],
+input[type="number"] {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 10px;
+  box-shadow: var(--card-shadow);
+}
+
+select {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  margin: 5px;
+}
+
+table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  border-collapse: collapse;
+  box-shadow: var(--card-shadow);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+}
+
+thead {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+thead th {
+  padding: 15px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--background-color);
+}
+
+tbody tr:nth-child(even) {
+  background-color: #eaf6ff;
+}
+
+tbody td {
+  padding: 15px;
+  font-size: 1rem;
+}
+
+td button {
+  padding: 5px 10px;
+  font-size: 0.875rem;
+  background-color: var(--secondary-color);
+}
+
+td button:hover {
+  background-color: var(--primary-color);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+form label {
+  font-size: 1rem;
+  color: var(--foreground-color);
+}
+
+form input {
+  width: calc(100% - 20px);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pagination button {
+  padding: 10px;
+}
+
+.pagination span {
+  font-size: 1rem;
+}
+
+/* Card Container */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  margin: 15px auto;
+  width: 90%;
+  max-width: var(--max-width);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.card p {
+  font-size: 1rem;
+  color: var(--foreground-color);
+}
+
+/* Overlay Styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--overlay-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--primary-color);
+}
+
+.modal-close:hover {
+  color: var(--border-color);
 }
